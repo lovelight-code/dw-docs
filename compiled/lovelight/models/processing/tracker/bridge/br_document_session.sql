@@ -1,8 +1,0 @@
-
-
-select distinct
-    document_id,
-    session_id
-from "dw_dev"."landing_tracker"."ln_br_document_session"
-where document_id is not null
-  and session_id is not null
