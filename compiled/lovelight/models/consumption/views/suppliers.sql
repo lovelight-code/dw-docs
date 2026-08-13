@@ -1,3 +1,15 @@
 
 
-select * from "dw_dev"."consumption"."ref_suppliers"
+select
+    vendor_id,
+    vendor_name,
+    vendor_status,
+    vendor_type,
+    vendor_class,
+    abn,
+    legal_name,
+    terms,
+    currency_id,
+    last_modified_on,
+    created_on
+from "dw_dev"."consumption"."ref_suppliers"

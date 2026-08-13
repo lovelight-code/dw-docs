@@ -28,7 +28,6 @@ select
     f.myob_project,
     -- Tracker operational context (null for MYOB-only invoices)
     o.tracker_invoice_id,
-    o.src_sys_id,
     o.job,
     o.business_unit,
     o.is_paid,

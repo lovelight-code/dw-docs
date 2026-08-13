@@ -1,3 +1,33 @@
 
 
-select * from "dw_dev"."consumption"."ops_jobs"
+select
+    id,
+    state,
+    business_unit,
+    name,
+    apt,
+    status_change_date,
+    value_ex_gst,
+    is_exempt,
+    invoiced,
+    scheduled,
+    missing,
+    created_date,
+    status,
+    salesperson,
+    salesperson_myob_id,
+    sales_email,
+    is_reported_sale,
+    myob_project_id,
+    myob_project_task_id,
+    completed_date,
+    project_name,
+    job_name_prefix,
+    job_reference_with_development,
+    quoterite_job_id,
+    designer_commission_amt,
+    client_account,
+    client_contact,
+    ops_person,
+    ops_person_email
+from "dw_dev"."consumption"."ops_jobs"
