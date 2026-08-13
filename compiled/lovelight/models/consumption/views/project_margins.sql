@@ -1,6 +1,27 @@
 
 
-with transactions as (
+with project_divisions as (
+    select
+        myob_project                            as project_id,
+        min(nullif(division, '*missing*'))      as business_unit
+    from "dw_dev"."consumption"."fin_invoices"
+    where myob_project is not null
+      and myob_project != ''
+    group by myob_project
+),
+
+project_states as (
+    select
+        t.project_id,
+        regexp_replace(min(li.branch), '[0-9]', '') as state
+    from "dw_dev"."consumption"."fin_project_transactions" t
+    join "dw_dev"."landing_myob"."dw_invoicelineitems" li
+        on li.reference_nbr = t.ref_nbr
+    where li.branch in ('03VIC', '04NSW', '05QLD', '06ACT', '07SA')
+    group by t.project_id
+),
+
+transactions as (
     select
         project_id,
         account_group,
@@ -43,6 +64,8 @@ select
     o.job,
     p.project_id,
     o.owner_email,
+    coalesce(pd.business_unit, op.business_unit)                                        as business_unit,
+    coalesce(ps.state, op.state)                                                        as state,
     p.expected_margin,
     coalesce(a.revenue, 0)                                                          as revenue,
     coalesce(a.total_costs, 0)                                                      as total_costs,
@@ -59,5 +82,8 @@ select
 
 from "dw_dev"."consumption"."fin_projects" p
 left join "dw_dev"."consumption"."ops_project_owner" o  on o.myob_project_id = p.project_id
+left join "dw_dev"."consumption"."ops_projects" op      on op.myob_project_reference = p.project_id
 left join aggregated a                      on a.project_id = p.project_id
 left join allowances al                     on al.project_id = p.project_id
+left join project_states ps                 on ps.project_id = p.project_id
+left join project_divisions pd              on pd.project_id = p.project_id
