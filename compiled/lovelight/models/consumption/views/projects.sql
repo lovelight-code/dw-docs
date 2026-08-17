@@ -24,6 +24,7 @@ select
     address_longitude,
     have_formal_contract,
     po_number,
+    project_value,
     project_folder_url,
     website_development_id,
     myob_project_reference,
