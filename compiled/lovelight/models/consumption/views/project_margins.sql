@@ -75,6 +75,16 @@ select
         when coalesce(a.revenue, 0) = 0 then null
         else round(coalesce(a.gross_margin, 0) / a.revenue, 4)
     end                                                                             as gross_margin_pct,
+    case
+        when coalesce(a.revenue, 0) = 0                                             then null
+        when round(coalesce(a.gross_margin, 0) / a.revenue, 4) < 0                 then 'Below 0%'
+        when round(coalesce(a.gross_margin, 0) / a.revenue, 4) < 0.25              then '0% to 24.99%'
+        when round(coalesce(a.gross_margin, 0) / a.revenue, 4) < 0.30              then '25% to 29.99%'
+        when round(coalesce(a.gross_margin, 0) / a.revenue, 4) < 0.35              then '30% to 34.99%'
+        when round(coalesce(a.gross_margin, 0) / a.revenue, 4) < 0.40              then '35% to 39.99%'
+        when round(coalesce(a.gross_margin, 0) / a.revenue, 4) < 0.45              then '40% to 44.99%'
+        else                                                                        'Above 45%'
+    end                                                                             as margin_band,
     p.project_name,
     o.owner_name,
     o.ownership_source,
