@@ -31,6 +31,7 @@ select
     lost_reason,
     lead_id,
     quote_status,
+    project_quote_type,
     commission_rebate_payable,
     requote,
     actual_hours_to_quote,
