@@ -3,6 +3,8 @@
 select
     id,
     name,
+    project_id,
+    project_name,
     state,
     business_unit,
     account,
