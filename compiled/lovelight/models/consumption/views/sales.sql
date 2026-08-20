@@ -32,7 +32,7 @@ with proj_sales as (
       and p.project_name is not null
       and coalesce(p.ll_status_display, '') <> 'Cancelled'
 
-    union
+    union all
 
     -- Path B: project → opportunity (safety net)
     select
@@ -136,6 +136,12 @@ tracker_jobs_with_qr as (
       and j.is_exempt is not true
 ),
 
+qr_jobs as (
+    select distinct quoterite_job_id
+    from "dw_dev"."processing_tracker"."dim_job"
+    where quoterite_job_id is not null
+),
+
 qr_only_orders as (
     select
         vq.order_created::date                                                                as date,
@@ -145,7 +151,7 @@ qr_only_orders as (
         vq.order_sidemark                                                                     as project,
         vq.sales_rep                                                                          as salesperson,
         null::varchar                                                                         as opsperson,
-        vls.email                                                                             as sales_email,
+        s.email                                                                               as sales_email,
         vq.order_value_ex_gst                                                                 as value,
         0                                                                                     as designer_commissions,
         case when s.is_reported_sale is true then true else false end                         as is_active_sales,
@@ -158,24 +164,21 @@ qr_only_orders as (
         end                                                                                   as state,
         vq.company_name                                                                       as client_account,
         vq.email                                                                              as client_contact
-    from quoterite.v_orders vq
-    left join utils.v_lovelight_sales vls
-        on vls.employee = vq.sales_rep
+    from "dw_dev"."processing_quoterite"."orders" vq
     left join "dw_dev"."processing_tracker"."dim_salespeople" s
-        on s.email = vls.email
+        on s.full_name = vq.sales_rep
+       and s.is_reported_sale = true
+    left join qr_jobs j_any
+        on j_any.quoterite_job_id = vq.order_unique_id
     where vq.order_created::date >= date '2024-11-01'
       and vq.sales_rep not in ('Brock Cannon', 'Izzy Johannesen')
-      and not exists (
-          select 1
-          from "dw_dev"."processing_tracker"."dim_job" j_any
-          where j_any.quoterite_job_id = vq.order_unique_id
-      )
+      and j_any.quoterite_job_id is null
 )
 
 select * from deduped_proj_sales
-union
+union all
 select * from tracker_jobs
-union
+union all
 select * from tracker_jobs_with_qr
-union
+union all
 select * from qr_only_orders
