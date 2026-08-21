@@ -136,10 +136,20 @@ tracker_jobs_with_qr as (
       and j.is_exempt is not true
 ),
 
+salespeople as (
+    select
+        salesperson          as full_name,
+        max(sales_email)     as email,
+        true                 as is_reported_sale
+    from "dw_dev"."consumption"."ops_jobs"
+    where salesperson is not null
+      and is_reported_sale = true
+    group by salesperson
+),
+
 qr_jobs as (
     select distinct quoterite_job_id
-    from "dw_dev"."processing_tracker"."dim_job"
-    where quoterite_job_id is not null
+    from "dw_dev"."consumption"."temp_jobs"
 ),
 
 qr_only_orders as (
@@ -164,10 +174,9 @@ qr_only_orders as (
         end                                                                                   as state,
         vq.company_name                                                                       as client_account,
         vq.email                                                                              as client_contact
-    from "dw_dev"."processing_quoterite"."orders" vq
-    left join "dw_dev"."processing_tracker"."dim_salespeople" s
+    from "dw_dev"."consumption"."temp_orders" vq
+    left join salespeople s
         on s.full_name = vq.sales_rep
-       and s.is_reported_sale = true
     left join qr_jobs j_any
         on j_any.quoterite_job_id = vq.order_unique_id
     where vq.order_created::date >= date '2024-11-01'
