@@ -33,8 +33,8 @@ select
     o.sales_email,
     o.ops_email
 
-from "dw_dev"."consumption"."ops_invoices" o
-left join "dw_dev"."consumption"."fin_invoices" f
+from "dw_dev"."integration"."ops_invoices" o
+left join "dw_dev"."integration"."fin_invoices" f
     on f.invoice_number = o.myob_invoice_reference_number
 left join xero_inv xi
     on xi.invoicenumber = o.xero_invoice_id

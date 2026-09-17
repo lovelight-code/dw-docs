@@ -30,4 +30,4 @@ select
     client_contact,
     ops_person,
     ops_person_email
-from "dw_dev"."consumption"."ops_jobs"
+from "dw_dev"."integration"."ops_jobs"

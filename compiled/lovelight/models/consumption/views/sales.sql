@@ -21,10 +21,10 @@ with proj_sales as (
         o.state                                                                               as state,
         o.account                                                                             as client_account,
         o.contact                                                                             as client_contact
-    from "dw_dev"."consumption"."ops_opportunities" o
-    join "dw_dev"."consumption"."ops_opportunity_projects" bp
+    from "dw_dev"."integration"."ops_opportunities" o
+    join "dw_dev"."integration"."ops_opportunity_projects" bp
         on o.id = bp.opportunity_id
-    join "dw_dev"."consumption"."ops_projects" p
+    join "dw_dev"."integration"."ops_projects" p
         on bp.project_id = p.project_id
     where o.status = 'Won'
       and p.project_type = 'Direct'
@@ -53,10 +53,10 @@ with proj_sales as (
         o.state                                                                               as state,
         o.account                                                                             as client_account,
         o.contact                                                                             as client_contact
-    from "dw_dev"."consumption"."ops_projects" p
-    join "dw_dev"."consumption"."ops_opportunity_projects" bpo
+    from "dw_dev"."integration"."ops_projects" p
+    join "dw_dev"."integration"."ops_opportunity_projects" bpo
         on p.project_id = bpo.project_id
-    join "dw_dev"."consumption"."ops_opportunities" o
+    join "dw_dev"."integration"."ops_opportunities" o
         on bpo.opportunity_id = o.id
     where p.project_type = 'Direct'
       and lower(p.project_name) not like '%test%'
@@ -103,7 +103,7 @@ tracker_jobs as (
         j.state                                                                               as state,
         j.client_account                                                                      as client_account,
         j.client_contact                                                                      as client_contact
-    from "dw_dev"."consumption"."ops_jobs" j
+    from "dw_dev"."integration"."ops_jobs" j
     where j.value_ex_gst > 0
       and j.quoterite_job_id is null
       and j.is_exempt is not true
@@ -130,7 +130,7 @@ tracker_jobs_with_qr as (
         j.state                                                                               as state,
         j.client_account                                                                      as client_account,
         j.client_contact                                                                      as client_contact
-    from "dw_dev"."consumption"."ops_jobs" j
+    from "dw_dev"."integration"."ops_jobs" j
     where j.value_ex_gst > 0
       and j.quoterite_job_id is not null
       and j.is_exempt is not true
@@ -141,7 +141,7 @@ salespeople as (
         salesperson          as full_name,
         max(sales_email)     as email,
         true                 as is_reported_sale
-    from "dw_dev"."consumption"."ops_jobs"
+    from "dw_dev"."integration"."ops_jobs"
     where salesperson is not null
       and is_reported_sale = true
     group by salesperson
@@ -149,7 +149,7 @@ salespeople as (
 
 qr_jobs as (
     select distinct quoterite_job_id
-    from "dw_dev"."consumption"."temp_jobs"
+    from "dw_dev"."integration"."temp_jobs"
 ),
 
 qr_only_orders as (
@@ -174,7 +174,7 @@ qr_only_orders as (
         end                                                                                   as state,
         vq.company_name                                                                       as client_account,
         vq.email                                                                              as client_contact
-    from "dw_dev"."consumption"."temp_orders" vq
+    from "dw_dev"."integration"."temp_orders" vq
     left join salespeople s
         on s.full_name = vq.sales_rep
     left join qr_jobs j_any

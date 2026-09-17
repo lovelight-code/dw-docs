@@ -15,4 +15,4 @@ select
     is_future,
     priority,
     installer_report
-from "dw_dev"."consumption"."ops_callouts"
+from "dw_dev"."integration"."ops_callouts"

@@ -17,4 +17,4 @@ select
     date_closed,
     value_ex_gst,
     lost_reason
-from "dw_dev"."consumption"."ops_leads"
+from "dw_dev"."integration"."ops_leads"

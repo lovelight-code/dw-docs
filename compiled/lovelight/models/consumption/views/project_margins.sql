@@ -4,7 +4,7 @@ with project_divisions as (
     select
         myob_project                            as project_id,
         min(nullif(division, '*missing*'))      as business_unit
-    from "dw_dev"."consumption"."fin_invoices"
+    from "dw_dev"."integration"."fin_invoices"
     where myob_project is not null
       and myob_project != ''
     group by myob_project
@@ -14,7 +14,7 @@ project_states as (
     select
         t.project_id,
         regexp_replace(min(li.branch), '[0-9]', '') as state
-    from "dw_dev"."consumption"."fin_project_transactions" t
+    from "dw_dev"."integration"."fin_project_transactions" t
     join "dw_dev"."landing_myob"."dw_invoicelineitems" li
         on li.reference_nbr = t.ref_nbr
     where li.branch in ('03VIC', '04NSW', '05QLD', '06ACT', '07SA')
@@ -26,7 +26,7 @@ transactions as (
         project_id,
         account_group,
         amount
-    from "dw_dev"."consumption"."fin_project_transactions"
+    from "dw_dev"."integration"."fin_project_transactions"
     where account_group not in ('WIP', 'WIPINC')
 ),
 
@@ -52,7 +52,7 @@ allowances as (
     select
         project_id,
         sum(estimated_allowance_value) as total_bill_allowance
-    from "dw_dev"."consumption"."fin_bills"
+    from "dw_dev"."integration"."fin_bills"
     where estimated_allowance_value is not null
       and estimated_allowance_value != 0
     group by project_id
@@ -90,9 +90,9 @@ select
     o.ownership_source,
     coalesce(al.total_bill_allowance, 0)                                            as total_bill_allowance
 
-from "dw_dev"."consumption"."fin_projects" p
-left join "dw_dev"."consumption"."ops_project_owner" o  on o.myob_project_id = p.project_id
-left join "dw_dev"."consumption"."ops_projects" op      on op.myob_project_reference = p.project_id
+from "dw_dev"."integration"."fin_projects" p
+left join "dw_dev"."integration"."ops_project_owner" o  on o.myob_project_id = p.project_id
+left join "dw_dev"."integration"."ops_projects" op      on op.myob_project_reference = p.project_id
 left join aggregated a                      on a.project_id = p.project_id
 left join allowances al                     on al.project_id = p.project_id
 left join project_states ps                 on ps.project_id = p.project_id

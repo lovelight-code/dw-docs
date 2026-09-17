@@ -51,6 +51,6 @@ select
     o.division = f.division                                                            as division_match,
     o.state = f.state                                                                  as state_match
 
-from "dw_dev"."consumption"."fin_invoices" f
-left join "dw_dev"."consumption"."ops_invoices" o
+from "dw_dev"."integration"."fin_invoices" f
+left join "dw_dev"."integration"."ops_invoices" o
     on o.myob_invoice_reference_number = f.invoice_number

@@ -25,4 +25,4 @@ select
     balance,
     estimated_allowance_value,
     last_modified_on
-from "dw_dev"."consumption"."fin_bills"
+from "dw_dev"."integration"."fin_bills"

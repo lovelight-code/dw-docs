@@ -36,6 +36,6 @@ select
     o.sales_email,
     o.ops_email
 
-from "dw_dev"."consumption"."fin_invoices" f
-left join "dw_dev"."consumption"."ops_invoices" o
+from "dw_dev"."integration"."fin_invoices" f
+left join "dw_dev"."integration"."ops_invoices" o
     on o.myob_invoice_reference_number = f.invoice_number

@@ -26,4 +26,4 @@ select
     myob_customer_class,
     no_email,
     no_phone
-from "dw_dev"."consumption"."ops_contacts"
+from "dw_dev"."integration"."ops_contacts"

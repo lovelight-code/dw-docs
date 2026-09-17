@@ -14,4 +14,4 @@ select
     hd_delivery_code,
     get_tentative_invite,
     is_custom
-from "dw_dev"."consumption"."ops_installers"
+from "dw_dev"."integration"."ops_installers"

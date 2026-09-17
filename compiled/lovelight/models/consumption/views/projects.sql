@@ -39,4 +39,4 @@ select
     expected_margin,
     date_first_marked_compete,
     ll_status_display
-from "dw_dev"."consumption"."ops_projects"
+from "dw_dev"."integration"."ops_projects"

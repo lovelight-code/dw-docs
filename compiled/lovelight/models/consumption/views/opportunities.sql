@@ -51,4 +51,4 @@ select
     expected_value,
     volume_builder_po_number,
     is_requote
-from "dw_dev"."consumption"."ops_opportunities"
+from "dw_dev"."integration"."ops_opportunities"

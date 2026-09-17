@@ -15,4 +15,4 @@ select
     postal_code,
     last_modified_on,
     created_on
-from "dw_dev"."consumption"."ref_customers"
+from "dw_dev"."integration"."ref_customers"

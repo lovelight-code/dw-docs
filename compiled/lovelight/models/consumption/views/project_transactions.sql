@@ -26,4 +26,4 @@ select
     billed,
     released,
     tran_amount
-from "dw_dev"."consumption"."fin_project_transactions"
+from "dw_dev"."integration"."fin_project_transactions"

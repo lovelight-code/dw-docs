@@ -12,4 +12,4 @@ select
     currency_id,
     last_modified_on,
     created_on
-from "dw_dev"."consumption"."ref_suppliers"
+from "dw_dev"."integration"."ref_suppliers"
